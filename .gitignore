@@ -1,3 +1,6 @@
+.vagrant
+*.log
+
 admin-csr.json             
 admin-key.pem              
 admin.csr                  
@@ -32,3 +35,13 @@ worker-2-key.pem
 worker-2.csr
 worker-2.kubeconfig
 worker-2.pem
+cni-plugins-amd64-v0.6.0.tgz
+cri-containerd-1.0.0-alpha.0.tar.gz
+etcd-v3.2.8-linux-amd64.tar.gz
+kube-apiserver
+kube-controller-manager
+kube-proxy
+kube-scheduler
+kubectl
+kubelet
+kube-flannel.yml

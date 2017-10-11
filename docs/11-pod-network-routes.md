@@ -1,60 +1,57 @@
 # Provisioning Pod Network Routes
 
-Pods scheduled to a node receive an IP address from the node's Pod CIDR range. At this point pods can not communicate with other pods running on different nodes due to missing network [routes](https://cloud.google.com/compute/docs/vpc/routes).
+## Flannel
 
-In this lab you will create a route for each worker node that maps the node's Pod CIDR range to the node's internal IP address.
-
-> There are [other ways](https://kubernetes.io/docs/concepts/cluster-administration/networking/#how-to-achieve-this) to implement the Kubernetes networking model.
-
-## The Routing Table
-
-In this section you will gather the information required to create routes in the `kubernetes-the-hard-way` VPC network.
-
-Print the internal IP address and Pod CIDR range for each worker instance:
+使用 `flannel` 来解决 Pod 间通信问题。
 
 ```
-for instance in worker-0 worker-1 worker-2; do
-  gcloud compute instances describe ${instance} \
-    --format 'value[separator=" "](networkInterfaces[0].networkIP,metadata.items[0].value)'
-done
+wget -q --show-progress --https-only --timestamping \
+	"https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+```
+
+修改`command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr"]`为`command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr", "--iface-regex=192\\.168\\.100\\."]`。
+
+```
+kubectl apply -f kube-flannel.yml
 ```
 
 > output
 
 ```
-10.240.0.20 10.200.0.0/24
-10.240.0.21 10.200.1.0/24
-10.240.0.22 10.200.2.0/24
+clusterrole "flannel" created
+clusterrolebinding "flannel" created
+serviceaccount "flannel" created
+configmap "kube-flannel-cfg" created
+daemonset "kube-flannel-ds" created
 ```
 
-## Routes
-
-Create network routes for each worker instance:
-
+### 验证
 ```
-for i in 0 1 2; do
-  gcloud compute routes create kubernetes-route-10-200-${i}-0-24 \
-    --network kubernetes-the-hard-way \
-    --next-hop-address 10.240.0.2${i} \
-    --destination-range 10.200.${i}.0/24
-done
-```
-
-List the routes in the `kubernetes-the-hard-way` VPC network:
-
-```
-gcloud compute routes list --filter "network: kubernetes-the-hard-way"
+kubectl -n kube-system get pods
 ```
 
 > output
 
 ```
-NAME                            NETWORK                  DEST_RANGE     NEXT_HOP                  PRIORITY
-default-route-77bcc6bee33b5535  kubernetes-the-hard-way  10.240.0.0/24                            1000
-default-route-b11fc914b626974d  kubernetes-the-hard-way  0.0.0.0/0      default-internet-gateway  1000
-kubernetes-route-10-200-0-0-24  kubernetes-the-hard-way  10.200.0.0/24  10.240.0.20               1000
-kubernetes-route-10-200-1-0-24  kubernetes-the-hard-way  10.200.1.0/24  10.240.0.21               1000
-kubernetes-route-10-200-2-0-24  kubernetes-the-hard-way  10.200.2.0/24  10.240.0.22               1000
+NAME                    READY     STATUS    RESTARTS   AGE
+kube-flannel-ds-8p2pd   1/1       Running   0          1m
+kube-flannel-ds-9mxnc   1/1       Running   0          1m
+kube-flannel-ds-ldfq6   1/1       Running   0          1m
+```
+
+同时 worker 状态也会更新为`Ready`。
+
+```
+kubectl get nodes
+```
+
+> output
+
+```
+NAME       STATUS    ROLES     AGE      VERSION
+worker-0   Ready     <none>    3m       v1.8.0
+worker-1   Ready     <none>    3m       v1.8.0
+worker-2   Ready     <none>    3m       v1.8.0
 ```
 
 Next: [Deploying the DNS Cluster Add-on](12-dns-addon.md)

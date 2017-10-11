@@ -10,14 +10,12 @@ In this section you will generate kubeconfig files for the `kubelet` and `kube-p
 
 ### Kubernetes Public IP Address
 
-Each kubeconfig requires a Kubernetes API Server to connect to. To support high availability the IP address assigned to the external load balancer fronting the Kubernetes API Servers will be used.
+Each kubeconfig requires a Kubernetes API Server to connect to. To support high availability the VIP address assigned will be used.
 
-Retrieve the `kubernetes-the-hard-way` static IP address:
+Retrieve the `kubernetes-the-hard-way` static VIP address:
 
 ```
-KUBERNETES_PUBLIC_ADDRESS=$(gcloud compute addresses describe kubernetes-the-hard-way \
-  --region $(gcloud config get-value compute/region) \
-  --format 'value(address)')
+KUBERNETES_PUBLIC_ADDRESS="192.168.100.100"
 ```
 
 ### The kubelet Kubernetes Configuration File
@@ -88,14 +86,5 @@ kubectl config set-context default \
 kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
 ```
 
-## Distribute the Kubernetes Configuration Files
-
-Copy the appropriate `kubelet` and `kube-proxy` kubeconfig files to each worker instance:
-
-```
-for instance in worker-0 worker-1 worker-2; do
-  gcloud compute scp ${instance}.kubeconfig kube-proxy.kubeconfig ${instance}:~/
-done
-```
 
 Next: [Generating the Data Encryption Config and Key](06-data-encryption-keys.md)

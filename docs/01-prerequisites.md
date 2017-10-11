@@ -1,47 +1,22 @@
 # Prerequisites
 
-## Google Cloud Platform
+## VirtualBox
 
-This tutorial leverages the [Google Cloud Platform](https://cloud.google.com/) to streamline provisioning of the compute infrastructure required to bootstrap a Kubernetes cluster from the ground up. [Sign up](https://cloud.google.com/free/) for $300 in free credits.
+This tutorial leverages the [VirtualBox](https://www.virtualbox.org/) to streamline provisioning of the compute infrastructure required to bootstrap a Kubernetes cluster from the ground up. Click to [download and install VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
-[Estimated cost](https://cloud.google.com/products/calculator/#id=78df6ced-9c50-48f8-a670-bc5003f2ddaa) to run this tutorial: $0.22 per hour ($5.39 per day).
+### Vagrant
 
-> The compute resources required for this tutorial exceed the Google Cloud Platform free tier.
-
-## Google Cloud Platform SDK
-
-### Install the Google Cloud SDK
-
-Follow the Google Cloud SDK [documentation](https://cloud.google.com/sdk/) to install and configure the `gcloud` command line utility.
-
-Verify the Google Cloud SDK version is 173.0.0 or higher:
+使用 [Vagrant](https://www.vagrantup.com/) 管理虚拟机资源，使用 [vagrant-hosts](https://github.com/oscar-stack/vagrant-hosts) 插件管理虚拟机中的`/etc/hosts`文件。
 
 ```
-gcloud version
+vagrant plugin install vagrant-hosts
 ```
 
-### Set a Default Compute Region and Zone
-
-This tutorial assumes a default compute region and zone have been configured.
-
-If you are using the `gcloud` command-line tool for the first time `init` is the easiest way to do this:
+> output
 
 ```
-gcloud init
+Installing the 'vagrant-hosts' plugin. This can take a few minutes...
+Installed the plugin 'vagrant-hosts (2.8.0)'!
 ```
-
-Otherwise set a default compute region:
-
-```
-gcloud config set compute/region us-west1
-```
-
-Set a default compute zone:
-
-```
-gcloud config set compute/zone us-west1-c
-```
-
-> Use the `gcloud compute zones list` command to view additional regions and zones.
 
 Next: [Installing the Client Tools](02-client-tools.md)
