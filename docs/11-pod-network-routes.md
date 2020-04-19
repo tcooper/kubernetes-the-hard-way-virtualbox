@@ -2,14 +2,14 @@
 
 ## Flannel
 
-使用 `flannel` 来解决 Pod 间通信问题。
+Use `flannel` to solve communication problems between pods.
 
 ```
 wget -q --show-progress --https-only --timestamping \
 	"https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
 ```
 
-修改`command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr"]`为`command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr", "--iface-regex=192\\.168\\.100\\."]`。
+Modify `command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr"]`for`command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr", "--iface-regex=192\\.168\\.100\\."]`。
 
 ```
 kubectl apply -f kube-flannel.yml
@@ -25,7 +25,7 @@ configmap "kube-flannel-cfg" created
 daemonset "kube-flannel-ds" created
 ```
 
-### 验证
+### Verify
 ```
 kubectl -n kube-system get pods
 ```
