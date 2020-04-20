@@ -2,13 +2,6 @@
 
 In this lab you will bootstrap three Kubernetes worker nodes. The following components will be installed on each node: [runc](https://github.com/opencontainers/runc), [container networking plugins](https://github.com/containernetworking/cni), [cri-containerd](https://github.com/kubernetes-incubator/cri-containerd), [kubelet](https://kubernetes.io/docs/admin/kubelet), and [kube-proxy](https://kubernetes.io/docs/concepts/cluster-administration/proxies).
 
-## Prerequisites
-
-The commands in this lab must be run on each worker instance: `worker-0`, `worker-1`, and `worker-2`. Login to each worker instance using the `vagrant ssh` command. Example:
-
-```
-vagrant ssh worker-0
-```
 
 ## Download Worker Binaries
 
@@ -19,6 +12,14 @@ wget -q --show-progress --https-only --timestamping \
   https://storage.googleapis.com/kubernetes-release/release/v1.8.0/bin/linux/amd64/kubectl \
   https://storage.googleapis.com/kubernetes-release/release/v1.8.0/bin/linux/amd64/kube-proxy \
   https://storage.googleapis.com/kubernetes-release/release/v1.8.0/bin/linux/amd64/kubelet
+```
+
+## Prerequisites
+
+The commands in this lab must be run on each worker instance: `worker-0`, `worker-1`, and `worker-2`. Login to each worker instance using the `vagrant ssh` command. Example:
+
+```
+vagrant ssh worker-0
 ```
 
 ## Provisioning a Kubernetes Worker Node
