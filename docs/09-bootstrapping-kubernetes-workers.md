@@ -8,7 +8,6 @@ In this lab you will bootstrap three Kubernetes worker nodes. The following comp
 ```
 wget -q --show-progress --https-only --timestamping \
   https://github.com/containernetworking/plugins/releases/download/v0.7.1/cni-plugins-amd64-v0.7.1.tgz \
-  https://github.com/kubernetes-incubator/cri-containerd/releases/download/v1.0.0-alpha.0/cri-containerd-1.0.0-alpha.0.tar.gz \
   https://storage.googleapis.com/kubernetes-release/release/v1.18.1/bin/linux/amd64/kubectl \
   https://storage.googleapis.com/kubernetes-release/release/v1.18.1/bin/linux/amd64/kube-proxy \
   https://storage.googleapis.com/kubernetes-release/release/v1.18.1/bin/linux/amd64/kubelet
@@ -27,7 +26,7 @@ vagrant ssh worker-0
 Install the OS dependencies:
 
 ```
-sudo apt update && sudo apt -y install socat
+sudo apt update && sudo apt -y install socat containerd
 ```
 
 > The socat binary enables support for the `kubectl port-forward` command.
@@ -103,7 +102,7 @@ ExecStart=/usr/local/bin/kubelet \\
   --cluster-dns=10.32.0.10 \\
   --cluster-domain=cluster.local \\
   --container-runtime=remote \\
-  --container-runtime-endpoint=unix:///var/run/cri-containerd.sock \\
+  --container-runtime-endpoint=unix:///var/run/containerd/containerd.sock \\
   --image-pull-progress-deadline=2m \\
   --kubeconfig=/var/lib/kubelet/kubeconfig \\
   --network-plugin=cni \\
@@ -150,26 +149,6 @@ WantedBy=multi-user.target
 EOF
 ```
 
-### Configure the cri-containerd
-Create the `cri-containerd.service` systemd unit file:
-
-```
-cat > cri-containerd.service <<EOF
-[Unit]
-Description=Kubernetes containerd CRI shim
-Requires=network-online.target
-After=containerd.service
-
-[Service]
-Restart=always
-RestartSec=5
-ExecStart=/usr/local/bin/cri-containerd --logtostderr --stream-addr ${INTERNAL_IP}
-OOMScoreAdjust=-999
-
-[Install]
-WantedBy=multi-user.target
-EOF
-```
 
 ### Start the Worker Services
 
