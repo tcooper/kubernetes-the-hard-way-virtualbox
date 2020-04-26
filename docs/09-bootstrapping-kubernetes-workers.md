@@ -49,11 +49,11 @@ sudo mkdir -p \
 Install the worker binaries:
 
 ```
-sudo tar -xvf /vagrant/cni-plugins-amd64-v0.6.0.tgz -C /opt/cni/bin/
+sudo tar -xvf /vagrant/cni-plugins-amd64-v0.7.1.tgz -C /opt/cni/bin/
 ```
 
 ```
-sudo tar -xvf /vagrant/cri-containerd-1.0.0-alpha.0.tar.gz -C /
+#sudo tar -xvf /vagrant/cri-containerd-1.0.0-alpha.0.tar.gz -C /
 ```
 
 ```
