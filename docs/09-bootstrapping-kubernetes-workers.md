@@ -23,7 +23,7 @@ vagrant ssh worker-0
 
 ## Provisioning a Kubernetes Worker Node
 
-Install the OS dependencies:
+Install the OS dependencies and containerd package:
 
 ```
 sudo apt update && sudo apt -y install socat containerd
@@ -51,9 +51,6 @@ Install the worker binaries:
 sudo tar -xvf /vagrant/cni-plugins-amd64-v0.7.1.tgz -C /opt/cni/bin/
 ```
 
-```
-#sudo tar -xvf /vagrant/cri-containerd-1.0.0-alpha.0.tar.gz -C /
-```
 
 ```
 (cd /vagrant && sudo cp kubectl kube-proxy kubelet /usr/local/bin/)
@@ -153,7 +150,7 @@ EOF
 ### Start the Worker Services
 
 ```
-sudo mv kubelet.service kube-proxy.service cri-containerd.service /etc/systemd/system/
+sudo mv kubelet.service kube-proxy.service /etc/systemd/system/
 ```
 
 ```
@@ -161,11 +158,11 @@ sudo systemctl daemon-reload
 ```
 
 ```
-sudo systemctl enable containerd cri-containerd kubelet kube-proxy
+sudo systemctl enable containerd kubelet kube-proxy
 ```
 
 ```
-sudo systemctl start containerd cri-containerd kubelet kube-proxy
+sudo systemctl start containerd kubelet kube-proxy
 ```
 
 > Remember to run the above commands on each worker node: `worker-0`, `worker-1`, and `worker-2`.
