@@ -254,6 +254,12 @@ kubernetes-key.pem
 kubernetes.pem
 ```
 
+Concatenate Kubernetes API Server certificate with CA:
+
+```
+cat kubernetes.pem ca.pem > kubernetes-tls-cert-file.pem
+```
+
 > The `kube-proxy` and `kubelet` client certificates will be used to generate client authentication configuration files in the next lab.
 
 Next: [Generating Kubernetes Configuration Files for Authentication](05-kubernetes-configuration-files.md)

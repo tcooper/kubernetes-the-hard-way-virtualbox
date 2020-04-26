@@ -42,7 +42,7 @@ sudo mkdir -p /var/lib/kubernetes/
 ```
 
 ```
-(cd /vagrant && sudo cp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem encryption-config.yaml /var/lib/kubernetes/)
+(cd /vagrant && sudo cp ca.pem ca-key.pem kubernetes-tls-cert-file.pem kubernetes-key.pem kubernetes.pem encryption-config.yaml /var/lib/kubernetes/)
 ```
 
 The instance internal IP address will be used advertise the API Server to members of the cluster. Retrieve the internal IP address for the current compute instance:
@@ -88,8 +88,7 @@ ExecStart=/usr/local/bin/kube-apiserver \\
   --service-account-key-file=/var/lib/kubernetes/ca-key.pem \\
   --service-cluster-ip-range=10.32.0.0/24 \\
   --service-node-port-range=30000-32767 \\
-  --tls-ca-file=/var/lib/kubernetes/ca.pem \\
-  --tls-cert-file=/var/lib/kubernetes/kubernetes.pem \\
+  --tls-cert-file=/var/lib/kubernetes/kubernetes-tls-cert-file.pem \\
   --tls-private-key-file=/var/lib/kubernetes/kubernetes-key.pem \\
   --v=2
 Restart=on-failure
