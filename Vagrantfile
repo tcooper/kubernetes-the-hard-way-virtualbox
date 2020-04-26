@@ -29,6 +29,7 @@ Vagrant.configure(2) do |config|
       node.vm.provider "virtualbox" do |vb|
         vb.name = "worker-#{i}"
       end
+      node.vm.provision "shell", path: "worker-provision.sh"
     end
   end
 end
