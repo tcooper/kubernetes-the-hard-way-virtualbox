@@ -90,8 +90,8 @@ cat > kubelet.service <<EOF
 [Unit]
 Description=Kubernetes Kubelet
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
-After=cri-containerd.service
-Requires=cri-containerd.service
+After=containerd.service
+Requires=containerd.service
 
 [Service]
 ExecStart=/usr/local/bin/kubelet \\
