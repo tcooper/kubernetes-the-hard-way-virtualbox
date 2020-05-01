@@ -5,8 +5,8 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/bionic64"
   config.vm.box_check_update = false
   config.vm.provider "virtualbox" do |vb|
-    vb.cpus = 1
-    vb.memory = 768
+#    vb.cpus = 1
+#    vb.memory = 768
   end
 
   (0..2).each do |i|
@@ -16,6 +16,8 @@ Vagrant.configure(2) do |config|
       node.vm.provision :hosts, :sync_hosts => true
       node.vm.provider "virtualbox" do |vb|
         vb.name = "controller-#{i}"
+        vb.cpus = 1
+        vb.memory = 1024
       end
       node.vm.provision "shell", path: "heartbeat.sh"
     end
@@ -28,6 +30,8 @@ Vagrant.configure(2) do |config|
       node.vm.provision :hosts, :sync_hosts => true
       node.vm.provider "virtualbox" do |vb|
         vb.name = "worker-#{i}"
+        vb.cpus = 1
+        vb.memory = 512
       end
       node.vm.provision "shell", path: "worker-provision.sh"
     end
