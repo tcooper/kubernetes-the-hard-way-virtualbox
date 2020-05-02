@@ -8,10 +8,10 @@ Download the official Kubernetes release binaries:
 
 ```
 wget -q --show-progress --https-only --timestamping \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kube-apiserver" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kube-controller-manager" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kube-scheduler" \
-  "https://storage.googleapis.com/kubernetes-release/release/v1.18.2/bin/linux/amd64/kubectl"
+  "https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kube-apiserver" \
+  "https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kube-controller-manager" \
+  "https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kube-scheduler" \
+  "https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl"
 ```
 
 ## Prerequisites
@@ -61,7 +61,7 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
 ExecStart=/usr/local/bin/kube-apiserver \\
-  --admission-control=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \\
+  --enable-admission-plugins=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \ \\
   --advertise-address=${INTERNAL_IP} \\
   --allow-privileged=true \\
   --apiserver-count=3 \\
@@ -78,8 +78,9 @@ ExecStart=/usr/local/bin/kube-apiserver \\
   --etcd-keyfile=/var/lib/kubernetes/kubernetes-key.pem \\
   --etcd-servers=https://192.168.100.10:2379,https://192.168.100.11:2379,https://192.168.100.12:2379 \\
   --event-ttl=1h \\
-  --experimental-encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \\
+  --encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \\
   --insecure-bind-address=127.0.0.1 \\
+  --insecure-port=8080 \\
   --kubelet-certificate-authority=/var/lib/kubernetes/ca.pem \\
   --kubelet-client-certificate=/var/lib/kubernetes/kubernetes.pem \\
   --kubelet-client-key=/var/lib/kubernetes/kubernetes-key.pem \\
@@ -197,9 +198,14 @@ In this section you will configure RBAC permissions to allow the Kubernetes API 
 
 > This tutorial sets the Kubelet `--authorization-mode` flag to `Webhook`. Webhook mode uses the [SubjectAccessReview](https://kubernetes.io/docs/admin/authorization/#checking-api-access) API to determine authorization.
 
+
+*Below commands can be run from your host and not from controller-0*
+<s>
 ```
 vagrant ssh controller-0
 ```
+</s>
+
 
 Create the `system:kube-apiserver-to-kubelet` [ClusterRole](https://kubernetes.io/docs/admin/authorization/rbac/#role-and-clusterrole) with permissions to access the Kubelet API and perform most common tasks associated with managing pods:
 
