@@ -46,3 +46,4 @@ kubectl
 kubelet
 kube-flannel.yml
 kubernetes-tls-cert-file.pem
+controller-kubectl-config.yaml

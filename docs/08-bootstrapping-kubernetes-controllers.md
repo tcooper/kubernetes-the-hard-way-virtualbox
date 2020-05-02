@@ -2,6 +2,32 @@
 
 In this lab you will bootstrap the Kubernetes control plane across three compute instances and configure it for high availability. The following components will be installed on each node: Kubernetes API Server, Scheduler, and Controller Manager.
 
+Will be also configured `kubectl` inside controller nodes.
+
+```
+cat > controller-kubectl-config.yaml <<EOF
+apiVersion: v1
+clusters:
+- cluster:
+    server: http://127.0.0.1:8080
+  name: kubernetes-the-hard-way
+contexts:
+- context:
+    cluster: kubernetes-the-hard-way
+    user: admin
+  name: kubernetes-the-hard-way
+current-context: kubernetes-the-hard-way
+kind: Config
+preferences: {}
+EOF
+```
+
+Result is:
+
+```
+controller-kubectl-config.yaml
+```
+
 ## Download the Kubernetes Controller Binaries
 
 Download the official Kubernetes release binaries:
@@ -23,6 +49,13 @@ vagrant ssh controller-0
 ```
 
 ## Provision the Kubernetes Control Plane
+
+### Configure kubectl
+Configure kubectl:
+
+```
+(mkdir -p ~/.kube/ && cp /vagrant/controller-kubectl-config.yaml ~/.kube/config)
+```
 
 ### Install the Kubernetes Controller Binaries
 Install the Kubernetes binaries:
@@ -177,6 +210,8 @@ sudo systemctl start kube-apiserver kube-controller-manager kube-scheduler
 
 ### Verification
 
+To execute commands below is necessary to have previuosly configured `kubeadm` on controllers node or an error will be shown: `error: no configuration has been provided, try setting KUBERNETES_MASTER environment variable`
+
 ```
 kubectl get componentstatuses
 ```
@@ -199,13 +234,9 @@ In this section you will configure RBAC permissions to allow the Kubernetes API 
 > This tutorial sets the Kubelet `--authorization-mode` flag to `Webhook`. Webhook mode uses the [SubjectAccessReview](https://kubernetes.io/docs/admin/authorization/#checking-api-access) API to determine authorization.
 
 
-*Below commands can be run from your host and not from controller-0*
-<s>
 ```
 vagrant ssh controller-0
 ```
-</s>
-
 
 Create the `system:kube-apiserver-to-kubelet` [ClusterRole](https://kubernetes.io/docs/admin/authorization/rbac/#role-and-clusterrole) with permissions to access the Kubelet API and perform most common tasks associated with managing pods:
 
