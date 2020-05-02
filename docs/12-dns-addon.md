@@ -78,4 +78,29 @@ Name:      kubernetes
 Address 1: 10.32.0.1 kubernetes.default.svc.cluster.local
 ```
 
+## Upstream resolution
+
+To enable upstream DNS resolution just download and modify the `coredns.yaml` int the `Corefile` section as follows:
+
+```
+  Corefile: |
+    .:53 {
+        errors
+        health
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+          pods insecure
+          upstream
+          fallthrough in-addr.arpa ip6.arpa
+        }
+        forward . 8.8.8.8
+        prometheus :9153
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+---
+```
+
 Next: [Smoke Test](13-smoke-test.md)
