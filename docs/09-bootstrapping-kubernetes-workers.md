@@ -103,7 +103,6 @@ ExecStart=/usr/local/bin/kubelet \\
   --kubeconfig=/var/lib/kubelet/kubeconfig \\
   --network-plugin=cni \\
   --register-node=true \\
-  --require-kubeconfig \\
   --runtime-request-timeout=25m \\
   --tls-cert-file=/var/lib/kubelet/${HOSTNAME}.pem \\
   --tls-private-key-file=/var/lib/kubelet/${HOSTNAME}-key.pem \\
