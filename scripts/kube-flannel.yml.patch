@@ -1,0 +1,10 @@
+--- kube-flannel.yml	2022-07-28 23:36:07.000000000 -0700
++++ kube-flannel.yml	2022-07-28 23:36:43.000000000 -0700
+@@ -189,6 +189,7 @@
+         args:
+         - --ip-masq
+         - --kube-subnet-mgr
++        - --iface-regex=192.168.100.
+         resources:
+           requests:
+             cpu: "100m"
